@@ -37,7 +37,7 @@ def image_scraping_tool(url: str):
 
 os.environ['GROQ_API_KEY']=st.secrets['GRO_API_KEY']
 llm_manager = ChatGroq(model='gemma2-9b-it', temperature=0.3)
-llm = ChatGroq(model="llama-3.1-70b-versatile", api_key=os.environ.get('GROQ_API_KEY'))
+llm = ChatGroq(model="llama-3.1-70b-versatile") #api_key=os.environ.get('GROQ_API_KEY'))
 
 research_agent = Agent(
   role='Web Researcher News',
