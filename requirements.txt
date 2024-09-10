@@ -1,0 +1,11 @@
+crewai==0.41.1
+crewai-tools==0.4.26
+duckduckgo_search==6.2.5
+langchain==0.2.11
+langchain-community==0.2.10
+langchain-core==0.2.26
+langchain-groq==0.1.9
+setuptools==72.1.0
+starlette==0.37.2
+streamlit==1.37.1
+
