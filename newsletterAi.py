@@ -114,13 +114,13 @@ image_scraping_task = Task(
 
 escritor = Agent(
     role='Escritor Sênior',
-    goal='Escrever artigos de notícias chamativos e envolventes',
-    backstory='Escritor sênior com 30 anos de experiência em escrever artigos de notícias criativos, trabalha em diversos jornais influentes',
+    goal='Escrever resumos de notícias',
+    backstory='Escritor sênior com 30 anos de experiência em escrever artigos resumidos de notícias, trabalha em diversos jornais influentes',
     llm=llm,
     verbose=True,
     allow_delegation=True,
     #tools = [],
-    #max_iter=15
+    max_iter=15
 )
 tarefa_escritor = Task(
     agent = escritor,
@@ -128,7 +128,7 @@ tarefa_escritor = Task(
     sobre os temas: {assunto} | {assunto2} | {time}
     ''',
     expected_output = '''
-    Leia o modelo definido no <template> para se inspirar no formato de saída. 
+    Leia o modelo definido no <template> abaixo para se inspirar no mesmo formato de saída. 
 
     <template>
 
