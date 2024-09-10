@@ -50,7 +50,7 @@ research_agent = Agent(
   tools=[search_results]
 )
 research_task = Task(
-  description=f'Find the current news about the inputs user. The current date is {datetime.now()}.',
+  description=f'Find the current news about the user input. The current date is {datetime.now()}.',
   expected_output='''Uma lista com as 2 notícias mais recentes sobre o tema: {assunto}.
   Forneça os links de onde encontrou as 2 notícias.
   ''',
@@ -79,7 +79,7 @@ research_task_two = Task(
 pesquisador_clubes = Agent(
   role='Pesquisador Esportivo',
   goal='Encontrar notícias relevantes sobre o time de futebol: {time}',
-  backstory="""Você é um jornalista esportivo de uma grande site esportivo.
+  backstory="""Você é um jornalista esportivo de um grande site esportivo.
   Você é responsável por pesquisar notícias atuais sobre times de futebol.""",
   verbose=True,
   llm=llm,
@@ -120,7 +120,7 @@ escritor = Agent(
     verbose=True,
     allow_delegation=True,
     #tools = [],
-    max_iter=15
+    #max_iter=15
 )
 tarefa_escritor = Task(
     agent = escritor,
