@@ -12,7 +12,7 @@ from datetime import datetime
 
 headers = {'USER_AGENT':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36'}
 
-file_tool = FileReadTool('news.txt')
+#file_tool = FileReadTool('news.txt')
 wrapper = DuckDuckGoSearchAPIWrapper(region='br-pt', backend='api', time='w', source='text')
 search_tool = DuckDuckGoSearchRun(api_wrapper=wrapper)
 search_results = DuckDuckGoSearchResults(num_results=5, api_wrapper=wrapper)
@@ -114,20 +114,18 @@ image_scraping_task = Task(
 
 escritor = Agent(
     role='Escritor Sênior',
-    goal='Escrever resumos chamativos e envolventes sobre os assuntos solicitados',
-    backstory='Escritor sênior com 30 anos de experiência em escrever resumos de notícias criativos, trabalha em diversos jornais influentes',
+    goal='Escrever artigos de notícias chamativos e envolventes',
+    backstory='Escritor sênior com 30 anos de experiência em escrever artigos de notícias criativos, trabalha em diversos jornais influentes',
     llm=llm,
     verbose=True,
     allow_delegation=True,
-    tools = [file_tool],
+    #tools = [],
     max_iter=15
 )
 tarefa_escritor = Task(
     agent = escritor,
-    description = '''Elaborar uma Newsletter de fácil leitura no idioma Português das notícias recebidas dos agentes pesquisadores
+    description = '''Elaborar uma Newsletter de fácil leitura no idioma Português do Brasil, das notícias recebidas dos agentes pesquisadores
     sobre os temas: {assunto} | {assunto2} | {time}
-
-    Use a ferramenta para ler o arquivo modelo para se inspirar no mesmo formato de saída.
     ''',
     expected_output = '''
     siga as instruções definidas no <template>
@@ -142,15 +140,15 @@ tarefa_escritor = Task(
         Reunimos alguns artigos relevantes para você se manter atualizado"
 
     
-    *task -> Elabore uma Newsletter no idioma Português, de fácil leitura, com as notícias recebidas.
+    *task -> Elabore uma Newsletter em markdown de fácil leitura, com as notícias e os links recebidos seguindo a estrutura abaixo:
 
-    - o título da noticia com a data dela ao lado;\n
-    - breve resumo da noticia com no máximo 2 parágrafos;\n
-    - link da notícia(Leia mais)
+    - [título] o título da noticia com a data dela ao lado\n
+    - [resumo] um breve resumo da noticia com no máximo 2 parágrafos\n
+    - [Leia mais: url] link da notícia ao final\n
     
     </template>
 ''',
-    context = [research_task, research_task_two ,pesquisa_clubes_task],
+    context = [research_task, research_task_two, pesquisa_clubes_task]
     #output_file='/news4.txt' 
 )
 
