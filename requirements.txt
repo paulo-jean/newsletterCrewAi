@@ -9,4 +9,5 @@ setuptools==72.1.0
 starlette==0.37.2
 streamlit==1.37.1
 chromadb
+pysqlite3-binary
 
