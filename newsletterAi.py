@@ -128,23 +128,42 @@ tarefa_escritor = Task(
     sobre os temas: {assunto} | {assunto2} | {time}
     ''',
     expected_output = '''
-    siga as instruções definidas no <template>
+    Leia o modelo definido no <template> para se inspirar no formato de saída. 
 
     <template>
 
-    *obervação -> Utilize exatamente o seguinte texto para começar a Newsletter:
+    Olá, {nome}! 
 
-        "Olá, {nome}! ✌️
+Seja bem-vindo à sua Newsletter!
 
-        Seja bem-vindo à sua Newsletter!\n
-        Reunimos alguns artigos relevantes para você se manter atualizado"
+Reunimos alguns artigos relevantes para você se manter atualizado
 
-    
-    *task -> Elabore uma Newsletter em markdown de fácil leitura, com as notícias e os links recebidos seguindo a estrutura abaixo:
+**IA**
+- EUA, Reino Unido e UE assinam 1º tratado internacional de IA (06/09/2024)
+  - O tratado é uma resposta aos crescentes temores sobre a utilização dessas tecnologias. A proposta é criar normas para que o desenvolvimento e a utilização da IA sejam seguros e transparentes.
+  - https://www.cnnbrasil.com.br/economia/macroeconomia/eua-reino-unido-e-ue-assinam-1o-tratado-internacional-de-ia/
 
-    - [título] o título da noticia com a data dela ao lado\n
-    - [resumo] um breve resumo da noticia com no máximo 2 parágrafos\n
-    - [Leia mais: url] link da notícia ao final\n
+- UE, EUA e Reino Unido assinam acordo para regular IA (06/09/2024)
+  - As três potências concordaram em criar regras para o desenvolvimento e uso da inteligência artificial, visando evitar abusos e garantir a responsabilidade dos criadores.
+  - https://www.dw.com/pt-br/ue-eua-e-reino-unido-assinam-acordo-para-regular-ia/a-70148121
+
+**Política em SP**
+- Quem está na frente nas pesquisas para prefeito de SP? Veja (04/09/2024)
+  - O candidato à prefeitura de São Paulo é o que está liderando as pesquisas eleitorais. Ele promete melhorar a infraestrutura e a segurança da cidade.
+  - https://noticias.uol.com.br/eleicoes/2024/09/04/quem-esta-na-frente-nas-pesquisas-para-prefeito-de-sp-veja-resultados.htm
+
+- Azul domina campanha a prefeito de SP; intenção é passar seriedade com a cor mais institucional de todas, diz especialista (02/09/2024)
+  - A cor azul é a mais utilizada nas campanhas políticas para a prefeitura de São Paulo. Isso ocorre porque a cor azul é vista como símbolo de seriedade e institucionalidade.
+  - https://g1.globo.com/sp/sao-paulo/eleicoes/2024/noticia/2024/09/02/azul-domina-campanha-a-prefeito-de-sp-intencao-e-passar-seriedade-com-a-cor-mais-institucional-de-todas-diz-especialista.ghtml
+
+**Corinthians**
+- Corinthians acerta contratação do atacante holandês Memphis Depay (06/09/2024)
+  - O Corinthians anunciou a contratação do atacante holandês Memphis Depay. Ele é visto como um reforço importante para o time.
+  - https://ge.globo.com/futebol/times/corinthians/noticia/2024/09/06/corinthians-acerta-contratacao-do-atacante-holandes-memphis-depay.ghtml
+
+- Corinthians encaminha contratação do atacante holandês Memphis Depay (06/09/2024)
+  - O Corinthians está próxima de anunciar a contratação do atacante holandês Memphis Depay. Ele é visto como um reforço importante para o time.
+  - https://cbn.globo.com/esporte/noticia/2024/09/06/corinthians-encaminha-contratacao-do-atacante-holandes-memphis-depay.ghtml
     
     </template>
 ''',
