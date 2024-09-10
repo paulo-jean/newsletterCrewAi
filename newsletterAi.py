@@ -19,21 +19,45 @@ search_results = DuckDuckGoSearchResults(num_results=5, api_wrapper=wrapper)
 web_scrap_tool = ScrapeWebsiteTool()
 
 @tool
-def image_scraping_tool(url: str):
-  '''  Use essa ferramenta para extrair somente as urls das imagens do site.
+def modelo():
+  '''  Use essa ferramenta para ler o modelo de saída esperado e se inspirar no mesmo formato.
+  '''
+  texto = ''' 
+  Olá, {nome}! 
 
-    *Args -> input: url do site alvo   
-'''
-  try:
-    site = requests.get(url, headers=headers)
-    soup = BeautifulSoup(site.content, 'html.parser')
-    tag = soup.find_all('img')
-    links_imagens= [l['src'] for l in tag if l['src']]
-    return links_imagens
-  
-  except requests.exceptions.RequestException as e:
-    print(f"Erro ao fazer a requisição: {e}")
-    return []
+Seja bem-vindo à sua Newsletter!
+
+Reunimos alguns artigos relevantes para você se manter atualizado
+
+**IA**
+- EUA, Reino Unido e UE assinam 1º tratado internacional de IA (06/09/2024)
+  - O tratado é uma resposta aos crescentes temores sobre a utilização dessas tecnologias. A proposta é criar normas para que o desenvolvimento e a utilização da IA sejam seguros e transparentes.
+  - https://www.cnnbrasil.com.br/economia/macroeconomia/eua-reino-unido-e-ue-assinam-1o-tratado-internacional-de-ia/
+
+- UE, EUA e Reino Unido assinam acordo para regular IA (06/09/2024)
+  - As três potências concordaram em criar regras para o desenvolvimento e uso da inteligência artificial, visando evitar abusos e garantir a responsabilidade dos criadores.
+  - https://www.dw.com/pt-br/ue-eua-e-reino-unido-assinam-acordo-para-regular-ia/a-70148121
+
+**Política em SP**
+- Quem está na frente nas pesquisas para prefeito de SP? Veja (04/09/2024)
+  - O candidato à prefeitura de São Paulo é o que está liderando as pesquisas eleitorais. Ele promete melhorar a infraestrutura e a segurança da cidade.
+  - https://noticias.uol.com.br/eleicoes/2024/09/04/quem-esta-na-frente-nas-pesquisas-para-prefeito-de-sp-veja-resultados.htm
+
+- Azul domina campanha a prefeito de SP; intenção é passar seriedade com a cor mais institucional de todas, diz especialista (02/09/2024)
+  - A cor azul é a mais utilizada nas campanhas políticas para a prefeitura de São Paulo. Isso ocorre porque a cor azul é vista como símbolo de seriedade e institucionalidade.
+  - https://g1.globo.com/sp/sao-paulo/eleicoes/2024/noticia/2024/09/02/azul-domina-campanha-a-prefeito-de-sp-intencao-e-passar-seriedade-com-a-cor-mais-institucional-de-todas-diz-especialista.ghtml
+
+**Corinthians**
+- Corinthians acerta contratação do atacante holandês Memphis Depay (06/09/2024)
+  - O Corinthians anunciou a contratação do atacante holandês Memphis Depay. Ele é visto como um reforço importante para o time.
+  - https://ge.globo.com/futebol/times/corinthians/noticia/2024/09/06/corinthians-acerta-contratacao-do-atacante-holandes-memphis-depay.ghtml
+
+- Corinthians encaminha contratação do atacante holandês Memphis Depay (06/09/2024)
+  - O Corinthians está próxima de anunciar a contratação do atacante holandês Memphis Depay. Ele é visto como um reforço importante para o time.
+  - https://cbn.globo.com/esporte/noticia/2024/09/06/corinthians-encaminha-contratacao-do-atacante-holandes-memphis-depay.ghtml
+    
+  '''
+    return texto
 
 os.environ['GROQ_API_KEY']=st.secrets['GRO_API_KEY']
 llm_manager = ChatGroq(model='gemma2-9b-it', temperature=0.3)
@@ -93,25 +117,6 @@ pesquisa_clubes_task = Task(
   agent=pesquisador_clubes
 )
 
-image_scraper_agent = Agent(
-  role='Web Urls Images Scraper',
-  goal='Find Images Urls from a web site',
-  backstory="""You're a Scraper Agent at a large company.
-  You're responsible for research and scraping images urls from specified web site using your best tool for do that.""",
-  verbose=True,
-  allow_delegation=False,
-  llm=llm,
-  tools=[image_scraping_tool]
-)
-image_scraping_task = Task(
-  description='''Encontre as urls das respectivas imagens das notícias que recebeu dos agentes,
-  usando a sua ferramenta que faz a extração do links de imagens de um site especifico''',
-  expected_output='''Uma lista com as respectivas urls das imagens extraídas''',
-  agent=image_scraper_agent,
-  context=[research_task, research_task_two, pesquisa_clubes_task]
-  #async_execution=True
-)
-
 escritor = Agent(
     role='Escritor Sênior',
     goal='Escrever resumos de notícias',
@@ -119,56 +124,38 @@ escritor = Agent(
     llm=llm,
     verbose=True,
     allow_delegation=True,
-    #tools = [],
+    tools = [modelo],
     max_iter=15
 )
 tarefa_escritor = Task(
     agent = escritor,
     description = '''Elaborar uma Newsletter de fácil leitura no idioma Português do Brasil, das notícias recebidas dos agentes pesquisadores
-    sobre os temas: {assunto} | {assunto2} | {time}
+    sobre os temas: {assunto} | {assunto2} | {time}.
+
+    Use a ferramenta para se inspirar no arquivo modelo e usar o mesmo formato de saída.
     ''',
     expected_output = '''
-    Leia o modelo definido no <template> abaixo para se inspirar no mesmo formato de saída. 
+    siga as instruções definidas no <template>
 
     <template>
 
-    Olá, {nome}! 
+    *obervação -> Utilize exatamente o seguinte texto para começar a Newsletter:
 
-Seja bem-vindo à sua Newsletter!
+        "Olá, {nome}! ✌️
 
-Reunimos alguns artigos relevantes para você se manter atualizado
+        Seja bem-vindo à sua Newsletter!\n
+        Reunimos alguns artigos relevantes para você se manter atualizado"
 
-**IA**
-- EUA, Reino Unido e UE assinam 1º tratado internacional de IA (06/09/2024)
-  - O tratado é uma resposta aos crescentes temores sobre a utilização dessas tecnologias. A proposta é criar normas para que o desenvolvimento e a utilização da IA sejam seguros e transparentes.
-  - https://www.cnnbrasil.com.br/economia/macroeconomia/eua-reino-unido-e-ue-assinam-1o-tratado-internacional-de-ia/
+    
+    *task -> Elabore uma Newsletter em markdown de fácil leitura, com as notícias e os links recebidos seguindo a estrutura abaixo:
 
-- UE, EUA e Reino Unido assinam acordo para regular IA (06/09/2024)
-  - As três potências concordaram em criar regras para o desenvolvimento e uso da inteligência artificial, visando evitar abusos e garantir a responsabilidade dos criadores.
-  - https://www.dw.com/pt-br/ue-eua-e-reino-unido-assinam-acordo-para-regular-ia/a-70148121
-
-**Política em SP**
-- Quem está na frente nas pesquisas para prefeito de SP? Veja (04/09/2024)
-  - O candidato à prefeitura de São Paulo é o que está liderando as pesquisas eleitorais. Ele promete melhorar a infraestrutura e a segurança da cidade.
-  - https://noticias.uol.com.br/eleicoes/2024/09/04/quem-esta-na-frente-nas-pesquisas-para-prefeito-de-sp-veja-resultados.htm
-
-- Azul domina campanha a prefeito de SP; intenção é passar seriedade com a cor mais institucional de todas, diz especialista (02/09/2024)
-  - A cor azul é a mais utilizada nas campanhas políticas para a prefeitura de São Paulo. Isso ocorre porque a cor azul é vista como símbolo de seriedade e institucionalidade.
-  - https://g1.globo.com/sp/sao-paulo/eleicoes/2024/noticia/2024/09/02/azul-domina-campanha-a-prefeito-de-sp-intencao-e-passar-seriedade-com-a-cor-mais-institucional-de-todas-diz-especialista.ghtml
-
-**Corinthians**
-- Corinthians acerta contratação do atacante holandês Memphis Depay (06/09/2024)
-  - O Corinthians anunciou a contratação do atacante holandês Memphis Depay. Ele é visto como um reforço importante para o time.
-  - https://ge.globo.com/futebol/times/corinthians/noticia/2024/09/06/corinthians-acerta-contratacao-do-atacante-holandes-memphis-depay.ghtml
-
-- Corinthians encaminha contratação do atacante holandês Memphis Depay (06/09/2024)
-  - O Corinthians está próxima de anunciar a contratação do atacante holandês Memphis Depay. Ele é visto como um reforço importante para o time.
-  - https://cbn.globo.com/esporte/noticia/2024/09/06/corinthians-encaminha-contratacao-do-atacante-holandes-memphis-depay.ghtml
+    - [título] o título da noticia com a data dela ao lado\n
+    - [resumo] um breve resumo da noticia com no máximo 2 parágrafos\n
+    - [Leia mais: url] link da notícia ao final\n
     
     </template>
 ''',
-    context = [research_task, research_task_two, pesquisa_clubes_task]
-    #output_file='/news4.txt' 
+    context = [research_task, research_task_two, pesquisa_clubes_task] 
 )
 
 conversor = Agent( # opção para enviar a newsletter por email
