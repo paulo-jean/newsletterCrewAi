@@ -12,7 +12,7 @@ from datetime import datetime
 
 headers = {'USER_AGENT':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36'}
 
-file_tool = FileReadTool('/news.txt')
+file_tool = FileReadTool('news.txt')
 wrapper = DuckDuckGoSearchAPIWrapper(region='br-pt', backend='api', time='w', source='text')
 search_tool = DuckDuckGoSearchRun(api_wrapper=wrapper)
 search_results = DuckDuckGoSearchResults(num_results=5, api_wrapper=wrapper)
@@ -52,7 +52,7 @@ research_agent = Agent(
 research_task = Task(
   description=f'Find the current news about the inputs user. The current date is {datetime.now()}.',
   expected_output='''Uma lista com as 2 notícias mais recentes sobre o tema: {assunto}.
-  Forneça os links de onde pesquisou.
+  Forneça os links de onde encontrou as 2 notícias.
   ''',
   agent=research_agent,
   async_execution=True
@@ -89,7 +89,7 @@ pesquisador_clubes = Agent(
 pesquisa_clubes_task = Task(
   description=f'Pesquisar pelos últimos acontecimentos sobre o time de futebol: {{time}}. A data atual é {datetime.now()}.',
   expected_output='''Uma lista com as 2 notícias mais recentes sobre o time de futebol: {time}.
-  forneça também os links''',
+  forneça também os links das 2 notícias encontradas''',
   agent=pesquisador_clubes
 )
 
@@ -144,8 +144,8 @@ tarefa_escritor = Task(
     
     *task -> Elabore uma Newsletter no idioma Português, de fácil leitura, com as notícias recebidas.
 
-    - o título da noticia com a data dela ao lado\n
-    - breve resumo da noticia com no máximo 2 parágrafos\n
+    - o título da noticia com a data dela ao lado;\n
+    - breve resumo da noticia com no máximo 2 parágrafos;\n
     - link da notícia(Leia mais)
     
     </template>
