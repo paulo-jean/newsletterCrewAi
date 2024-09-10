@@ -12,8 +12,7 @@ from datetime import datetime
 
 headers = {'USER_AGENT':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36'}
 
-yt_tool = YouTubeSearchTool()
-file_tool = FileReadTool('/home/jp/Área de Trabalho/CrewAi/news.txt')#/home/jp/Área de Trabalho/CrewAi/modelo_saida.txt
+file_tool = FileReadTool('/news.txt')
 wrapper = DuckDuckGoSearchAPIWrapper(region='br-pt', backend='api', time='w', source='text')
 search_tool = DuckDuckGoSearchRun(api_wrapper=wrapper)
 search_results = DuckDuckGoSearchResults(num_results=5, api_wrapper=wrapper)
@@ -35,8 +34,6 @@ def image_scraping_tool(url: str):
   except requests.exceptions.RequestException as e:
     print(f"Erro ao fazer a requisição: {e}")
     return []
-
-#print(len(image_scraping_tool('https://www.artificialintelligence-news.com/')))
 
 os.environ['GROQ_API_KEY']=st.secrets['GRO_API_KEY']
 llm_manager = ChatGroq(model='gemma2-9b-it', temperature=0.3)
@@ -132,7 +129,6 @@ tarefa_escritor = Task(
 
     Use a ferramenta para ler o arquivo modelo para se inspirar no mesmo formato de saída.
     ''',
-    #Use a ferramenta para ler o arquivo modelo para se inspirar e usar o mesmo formato de saída.Garantindo que as notícias estejam recentes de acordo com a data atual: {datetime.now()}
     expected_output = '''
     siga as instruções definidas no <template>
 
@@ -156,10 +152,9 @@ tarefa_escritor = Task(
 ''',
     context = [research_task, research_task_two ,pesquisa_clubes_task],
     #output_file='/news4.txt' 
-    #Faça isso no idioma Português do Brasil. [em bullets point.]formato de saída final: Newsletter formatada em <!DOCTYPE html>
 )
 
-conversor = Agent(
+conversor = Agent( # opção para enviar a newsletter por email
     role='Desenvolvedor HTML',
     goal='Formatar textos para a linguagem de programação HTML',
     backstory='Desenvolvedor HTML nível Sênior, trabalha transformando qualquer conteúdo recebido para o formato HTML',
@@ -176,7 +171,7 @@ converter = Task(
     #formatada em <!DOCTYPE html>
 )
 
-# manager = Agent(
+# manager = Agent( --> opção para usar um gerente de projeto
 #     role="Project Manager",
 #     goal="Efficiently manage the crew and ensure high-quality task completion",
 #     backstory="You're an experienced project manager, skilled in overseeing complex projects and guiding teams to success. Your role is to coordinate the efforts of the crew members, ensuring that each task is completed on time and to the highest standard.",
