@@ -124,7 +124,7 @@ escritor = Agent(
     llm=llm,
     verbose=True,
     allow_delegation=True,
-    tools = [modelo],
+    tools = [modelo_newsletter],
     max_iter=15
 )
 tarefa_escritor = Task(
