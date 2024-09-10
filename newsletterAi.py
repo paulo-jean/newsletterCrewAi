@@ -57,7 +57,7 @@ Reunimos alguns artigos relevantes para você se manter atualizado
   - https://cbn.globo.com/esporte/noticia/2024/09/06/corinthians-encaminha-contratacao-do-atacante-holandes-memphis-depay.ghtml
     
   '''
-    return texto
+  return texto
 
 os.environ['GROQ_API_KEY']=st.secrets['GRO_API_KEY']
 llm_manager = ChatGroq(model='gemma2-9b-it', temperature=0.3)
